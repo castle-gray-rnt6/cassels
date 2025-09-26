@@ -62,11 +62,11 @@ We are the team _Castle Gray_ team of the [Rethinking Number
 Theory](https://sites.google.com/view/rethinkingnumbertheory/) workshop (sixth
 edition). Our members are:
 - [Jitandra Bajpai](https://user.math.uni-kiel.de/~jitendra/)
-- [Jorge Mello](https://www.jorgemello.org/)
 - [Kiran S. Kedlaya](https://kskedlaya.org/) (project leader)
-- [Nam Hoai Le](https://hoainam-le.github.io/)
+- [Nam H. Le](https://hoainam-le.github.io/)
 - [Meghan Lee](https://meghanhlee.github.io/)
 - [Antoine Leudière](https://cspages.ucalgary.ca/~antoine.leudiere1/)
+- [Jorge Mello](https://www.jorgemello.org/)
 
 This edition of Rethinking Number Theory is organized by:
 - [Jen Berg](https://sites.google.com/view/jenberg/home)
