@@ -1,0 +1,7 @@
+[package]
+name = "cassels"
+edition = "2024"  # Rust edition, latest at the moment of writing
+
+[dependencies]
+gcd = "2.3.0"
+itertools = "0.14.0"
