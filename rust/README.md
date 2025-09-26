@@ -1,8 +1,4 @@
-# Walkthrough our code
-
-- TODO: Add TOC with https://github.com/jonschlinkert/markdown-toc
-- TODO: Search for all instances of "TODO" and eliminate them
-- TODO: Rename `loop_over_roots` to `skip_cyclotomic_integers` or `filter_cyclotomic_integers`? Change this README accordingly
+# Overview of the Rust code
 
 ## Rust
 

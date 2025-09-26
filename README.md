@@ -72,3 +72,9 @@ This edition of Rethinking Number Theory is organized by:
 - [Jen Berg](https://sites.google.com/view/jenberg/home)
 - [Heidi Goodson](https://sites.google.com/site/heidigoodson/)
 - [Allechar Serrano López](https://www.allechar.org/)
+
+## TODO
+
+- [ ] Rename parse_cyclotomic_integer_exponents.sage and all relevant functions.
+- [ ] Add TOC to both READMEs with https://github.com/jonschlinkert/markdown-toc
+- [ ] Rename `loop_over_roots` to `skip_cyclotomic_integers` or `filter_cyclotomic_integers`? Change this README accordingly
