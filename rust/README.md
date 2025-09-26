@@ -46,9 +46,10 @@ some data to SageMath for exact computations; see below.
 
 ## SageMath
 
-In the [`../sage`](../sage/), we have two Jupyter notebooks running SageMath which refer to
-the output of the Rust program. The proof of Lemma 3.11 in the paper is logically dependent
-on the correctness of both the Rust and SageMath code.
+In the [`../sage`](../sage/) folder, we have two Jupyter notebooks running
+SageMath which refer to the output of the Rust program. The proof of Lemma 3.11
+in the paper is logically dependent on the correctness of both the Rust and
+SageMath code.
 
 1. In [`floating-point.ipynb`](../sage/floating-point.ipynb), we verify that
    the floating-point sines and cosines used in the Rust code are each valid to
