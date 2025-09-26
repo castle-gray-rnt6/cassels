@@ -1,0 +1,6 @@
+{"backend_state":"init","kernel":"sage-10.6","kernel_state":"idle","kernel_usage":{"cpu":0,"memory":0},"last_ipynb_save":1755553335148,"type":"settings"}
+{"cell_type":"code","exec_count":1,"id":"09854a","input":"RIF = RealIntervalField(200)","pos":1,"type":"cell"}
+{"cell_type":"code","exec_count":2,"id":"617cf5","input":"with open(\"Rust/tables.txt\") as f:\n    for line in f:\n        l = line.rstrip().split(\" \")\n        N, i, c, s = [eval(j) for j in l]\n        theta = RIF(2*pi*i/N)\n        real_cos, real_sin = cos(theta), sin(theta)\n        assert abs(RIF(c,c) - real_cos) < 10^-14\n        assert abs(RIF(s,s) - real_sin) < 10^-14\n","pos":2,"type":"cell"}
+{"cell_type":"markdown","id":"bf462e","input":"We verify that the sines and cosines computed in Rust are accurate to within $10^{-14}$.","pos":0,"type":"cell"}
+{"id":0,"time":1755553330728,"type":"user"}
+{"last_load":1755553329848,"type":"file"}

@@ -1,0 +1,18 @@
+{"backend_state":"running","connection_file":"/tmp/xdg-runtime-user/jupyter/kernel-76b876bf-012a-481b-bd4b-c52fef4c33d8.json","kernel":"sage-10.6","kernel_error":"","kernel_state":"idle","kernel_usage":{"cpu":0,"memory":0},"last_backend_state":1758442344982,"last_ipynb_save":1758442887685,"trust":true,"type":"settings"}
+{"cell_type":"code","end":1758442345674,"exec_count":1,"id":"51ba4a","input":"from pathlib import Path","kernel":"sage-10.6","pos":1,"start":1758442345667,"state":"done","type":"cell"}
+{"cell_type":"code","end":1758442379673,"exec_count":2,"id":"1717c1","input":"load('utils.sage')","kernel":"sage-10.6","pos":1.5,"start":1758442378672,"state":"done","type":"cell"}
+{"cell_type":"code","end":1758442733197,"exec_count":9,"id":"658024","input":"# Reference hashes\nload('create-table.sage')\nreference_hashes = table_hashes(TABLE_RAW)\nreference_hashes_set = set(reference_hashes) ","kernel":"sage-10.6","last":20,"pos":8,"start":1758442722804,"state":"done","type":"cell"}
+{"cell_type":"code","exec_count":0,"id":"59f61d","input":"","pos":13,"type":"cell"}
+{"cell_type":"code","exec_count":4,"id":"3bb31c","input":"load('parse_cyclotomic_integer_exponents.sage')","pos":2,"type":"cell"}
+{"cell_type":"code","exec_count":5,"id":"03281d","input":"output_path = Path('Rust/output.txt')\ncyc_integers = parse_cyclotomic_integer_exponents(output_path)\nprint(len(cyc_integers))","output":{"0":{"name":"stdout","output_type":"stream","text":"548\n"}},"pos":4,"type":"cell"}
+{"cell_type":"code","exec_count":6,"id":"abe9c1","input":"hashes = map(cyclotomic_hash,filter(lambda x: castle_below_cutoff(x, 5+1/25) and not is_cassels_form(x), cyc_integers))","pos":6,"type":"cell"}
+{"cell_type":"code","exec_count":8,"id":"b18789","input":"K.<z> = CyclotomicField(70)\nx = 1+z+z^10+z^29\nassert castle_below_cutoff(x, 5+1/25) and not castle_below_cutoff(x, 5)\nreference_hashes_set.add(cyclotomic_hash(x))","pos":10,"type":"cell"}
+{"cell_type":"code","exec_count":9,"id":"95e831","input":"# Candidate hashes\nassert all(hash_ in reference_hashes_set for hash_ in hashes)","pos":12,"type":"cell"}
+{"cell_type":"markdown","id":"093979","input":"First step: parse the cyclotomic integers from the `output.txt` file and get a list of SageMath cyclotomic integer objects.  \n\n","pos":3,"type":"cell"}
+{"cell_type":"markdown","id":"3b47bf","input":"We check that all tuples output by the Rust code correspond to cyclotomic integers which either belong to one of the infinite families (1), (2), (3) of Cassels's theorem or are equivalent to an entry of Table 1.","pos":0,"type":"cell"}
+{"cell_type":"markdown","id":"6dc558","input":"We want to compare these hashes to the hashes of Table 1. So, first, we need to get the hashes of Table 1. We split the hashes computations for convenience.\n","pos":7,"type":"cell"}
+{"cell_type":"markdown","id":"a0447c","input":"Create an iterator to find those cyclotomic integers that are **not** in Cassels form, and whose castle is at most $5.04$, and compute their hashes.","pos":5,"type":"cell"}
+{"cell_type":"markdown","id":"ab65e4","input":"Add one more hash corresponding to a cyclotomic integer discovered by Robinson-Wurtz with castle in (5, 5.04).","pos":9,"type":"cell"}
+{"cell_type":"markdown","id":"d7c5b6","input":"Confirm that every hash from our iterator appears in Table 1 or corresponds to the one exceptional value of Robinson-Wurtz.","pos":11,"type":"cell"}
+{"id":0,"time":1758442211095,"type":"user"}
+{"last_load":1758442202561,"type":"file"}
