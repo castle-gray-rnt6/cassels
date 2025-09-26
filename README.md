@@ -4,13 +4,21 @@ This repository is associated to the paper _The exceptional set in Cassels's
 theorem on small cyclotomic integers_ by Jitendra Bajpai, Srijan Das, Kiran S.
 Kedlaya, Nam H. Le, Meghan Lee, Antoine Leudière, and Jorge Mello.
 
+We solve a Number Theory conjecture related to the classification of "small"
+_cyclotomic integers_. The conjecture was stated by Raphael M. Robinson in his
+1965 paper [_Some conjectures about cyclotomic
+integers_](https://doi.org/10.1090/S0025-5718-1965-0180545-X). Our approach
+involves both theoretical work and efficient computation in the Rust
+programming language.
+
 ## Overview of the code
 
 ### Rust
 
 The folder [`rust`](rust/) contains a Rust program (`cassels` executable) to
 perform an exhaustive search for cyclotomic integers with small castle, as
-cited in Lemma 3.11. All instructions are in the [README](rust/README.md) of
+cited in Lemma 3.11. We use floating-point arithmetics. Compile instructions as
+well as some basic explanations are given in the [README](rust/README.md) of
 the folder.
 
 ### SageMath and Jupyter notebooks
@@ -46,3 +54,21 @@ in SageMath.
 
 - [`utils.sage`](sage/utils.sage): Implement various utility functions
 described in section 3.
+
+
+## Who we are
+
+We are the team _Castle Gray_ team of the [Rethinking Number
+Theory](https://sites.google.com/view/rethinkingnumbertheory/) workshop (sixth
+edition). Our members are:
+- [Jitandra Bajpai](https://user.math.uni-kiel.de/~jitendra/)
+- [Jorge Mello](https://www.jorgemello.org/)
+- [Kiran S. Kedlaya](https://kskedlaya.org/) (project leader)
+- [Nam Hoai Le](https://hoainam-le.github.io/)
+- [Meghan Lee](https://meghanhlee.github.io/)
+- [Antoine Leudière](https://cspages.ucalgary.ca/~antoine.leudiere1/)
+
+This edition of Rethinking Number Theory is organized by:
+- [Jen Berg](https://sites.google.com/view/jenberg/home)
+- [Heidi Goodson](https://sites.google.com/site/heidigoodson/)
+- [Allechar Serrano López](https://www.allechar.org/)
