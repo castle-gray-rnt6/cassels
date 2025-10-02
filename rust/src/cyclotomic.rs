@@ -1,19 +1,43 @@
-use gcd::euclid_u32;  // I'm sad this is not in the standard library
-
-// First: standard library
 use std::f64::consts::TAU;
 
+use gcd::euclid_u32;
+
+/// Return the vector (sin(j*2π/n), sin(j*2π/n)), for n input and 0 <= j < n.
 pub fn sin_cos_table(n: u32) -> Vec<(f64, f64)> {
     let angle0 = TAU / (n as f64);
-    // Iterate over j
+    // Iterate over j:
     (0..n)
-        // compute sin and cosine of 2*pi*j/n
+        // Compute sin and cosine of 2*pi*j/n:
         .map(|j| (angle0 * (j as f64)).sin_cos())
-        // collect and return a vector
+        // Collect and return a vector:
         .collect::<Vec<(f64, f64)>>()
 }
 
+/// Represent cyclotomic integers.
+///
+/// The cyclotomic integer is defined by its `level` and its `exponents`. The
+/// instance with level n and exponents (j1, ..., jk) this struct represents the
+/// cyclotomic integer
+///
+///   z_n^{j_1} + ... + z_n^{j_k},
+///
+/// where z_n is the root of unity exp(iπ/n).
+///
+/// Note that we also attach our cyclotomic integers with a sin-cos table. This
+/// table depends only of the level, and does not depend on the exponents.
+/// However, having easy access to the table is very convenient for computations
+/// related to the castle (method `castle_strictly_less`, which requires
+/// `conjugates_abs_squared`, where the table is used to compute the castle of
+/// algebraic conjugates). Furthermore, we only store an immutable reference to
+/// the table.
 pub struct CyclotomicInteger<'a> {
+    // A note on "lifetimes": because our instances store references, we must
+    // ensure that the references live at least as long as the instances
+    // themselves. To do that, one simply declares a so-called "lifetime" for
+    // the instances. In our case, the lifetime is `a`, and it is used after its
+    // declaration on the type annotation of the references we store. Note that
+    // the code cannot be compiled without this. More information here:
+    // https://doc.rust-lang.org/rust-by-example/scope/lifetime/fn.html.
     pub exponents: &'a Vec<u32>,
     pub level: u32,
     pub sin_cos_table: &'a Vec<(f64, f64)>,
@@ -21,11 +45,12 @@ pub struct CyclotomicInteger<'a> {
 
 impl CyclotomicInteger<'_> {
 
-    /// Iterate through the squares of the modules of the conjugates
-    /// of self. We use `abs` to stick the SageMath convention.
+    /// Iterate through the squares of the modules of the conjugates of the
+    /// cyclotomic integer.
+    ///
+    /// We use `abs` to stick the SageMath convention.
     fn conjugates_abs_squared(&self) -> impl Iterator<Item = f64> {
-
-        // Iterate through the conjugates
+        // Iterate through the conjugates:
         (1..self.level)
             // First, get the right Galois group automorphisms:
             .filter(|k| euclid_u32(*k, self.level) == 1)
@@ -41,24 +66,26 @@ impl CyclotomicInteger<'_> {
                     sin_sum += sin;
                     cos_sum += cos;
                 }
-
-                // Yield the square of the modulus
+                // Yield the square of the modulus (the function returns an
+                // iterator!):
                 sin_sum.powi(2) + cos_sum.powi(2)
             })
     }
 
-    /// Check whether castle is bounded above by the cutoff. This is more efficient than
-    /// computing the house first.
+    /// Check whether castle is bounded above by the cutoff.
+    ///
+    /// This is more efficient than computing the house first. N.b.: this
+    /// function could be merged with the previous one; we chose to keep it for
+    /// users to freely experiment with our code!
     pub fn castle_strictly_less(&self, cutoff: f64) -> bool {
-
         !self.conjugates_abs_squared().any(|x| x >= cutoff)
     }
 }
 
 // For idiomatic doctesting, see
 // https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html
-// Basically, add tests in the module below, prefix with #[test],
-// and run `cargo test`.
+// Basically, add tests in the module below, prefix with #[test], and run `cargo
+// test`.
 
 #[cfg(test)]
 mod tests {
