@@ -130,9 +130,9 @@ fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
 ///
 /// 2. For each such generated cyclotomic integer, we discard it if its castle
 ///    is >= 5.1 using the `discard_cyclotomic_integer` function. If the
-///    cyclotomic integer is not discarded by `discard_cyclotomic_integer`, then
-///    we keep track of it by storing it in the output file (note that we also
-///    store the computed sin-cos table).
+///    cyclotomic integer is not discarded by `discard_candidate`, then we keep
+///    track of it by storing it in the output file (note that we also store the
+///    computed sin-cos table).
 ///
 /// To speed up computation, we use multi-threading: this is done with
 /// `std::Thread`. We make sure that only one sin-cos table is stored in memory
@@ -140,8 +140,8 @@ fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
 ///
 /// This function is public and called on all eight values (N, n) given in the
 /// statement of Lemma 3.11; this is done in the `main` function (`main.rs`
-/// file).
-pub fn get_candidates(N: u32, n: usize, mut file_tables: &File, mut file_output: &File) {
+/// file). pub fn get_candidates(N: u32, n: usize, mut file_tables: &File, mut
+/// file_output: &File) {
 
     let NN = if N.is_multiple_of(2) {N} else {2*N};
     let N2 = NN/2;
