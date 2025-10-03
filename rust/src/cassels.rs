@@ -9,20 +9,34 @@ use itertools::Itertools;
 
 use super::cyclotomic::{sin_cos_table, CyclotomicInteger};
 
-fn skip_cyclotomic_integer(cyclotomic_integer: &CyclotomicInteger,
-                           n_values: (u32, u32, u32, u32, u32)) -> bool {
+/// Discard a cyclotomic integer, for Lemma 3.11 and function `get_candidates`.
+///
+/// The main goal of this function is to test whether the input cyclotomic
+/// integer has castle > 5.1; if that happens, the function returns `true`.
+/// However, it is possible to discard cyclotomic integers depending on other
+/// criterion as well; we do it in the process. Doing so greatly improves the
+/// total computation time (Rust + Sage).
+///
+/// Note that the cyclotomic integer is not the only input: we use some
+/// `n_values` that merely depend on the corresponding couple (N, n) in the
+/// function `get_candidates`. This is simply for convenience and efficiency.
+/// 
+/// This function is private and only used in `discard_candidates`
+/// (plural).
 
-    // We mostly work directly on these quantities:
-    let l = &cyclotomic_integer.exponents;  // Shorthand notation
+fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
+                     n_values: (u32, u32, u32, u32, u32)) -> bool {
+
+    // Let's create some shorthand notations:
+    let l = &cyclotomic_integer.exponents;
     let len = l.len();
     let (NN, N2, N3, N5, N7) = n_values;
 
-    // Remove some cases made redundant by complex conjugation.
+    // Remove some cases made redundant by complex conjugation:
     if l[2] + l[len-1] > NN + l[1] {
         return true;
     }
-
-    // Skip cases where two roots of unity differ by a factor of -1.
+    // Discard cases where two roots of unity differ by a factor of -1:
     for a in 0..len {
         for b in 0..a {
             if l[a] == l[b] + N2 {
@@ -30,8 +44,7 @@ fn skip_cyclotomic_integer(cyclotomic_integer: &CyclotomicInteger,
             }
         }
     }
-
-    // Skip cases where two roots of unity differ by a factor of zeta_3.
+    // Discard cases where two roots of unity differ by a factor of ζ_3:
     if N3 != 0 {
         for a in 0..len {
             for b in 0..a {
@@ -42,8 +55,7 @@ fn skip_cyclotomic_integer(cyclotomic_integer: &CyclotomicInteger,
             }
         }
     }
-
-    // Skip cases where three roots of unity differ by factors of zeta_5.
+    // Discard cases where three roots of unity differ by factors of ζ_5:
     if N5 != 0 {
         for a in 0..len {
             for b in 0..a {
@@ -59,21 +71,18 @@ fn skip_cyclotomic_integer(cyclotomic_integer: &CyclotomicInteger,
             }
         }
     }
-
-    // Filter for house squared <= 5.1.
+    // Discard when castle >= 5.1:
     if !cyclotomic_integer.castle_strictly_less(5.1_f64) {
        return true;
     }
-    
-    // Skip cases visibly of form (2) of Cassels's theorem.
+    // Discard cases visibly of form (2) of Cassels's theorem:
     if    len == 3 
        && (   l[2] == N2 - l[1]
            || l[2] == N2 + 2*l[1]
            || (2*l[2]) % NN == N2 + l[1]) {
        return true;
     }
-    
-    // Skip cases visibly of form (3) of Cassels's theorem.
+    // Discard cases visibly of form (3) of Cassels's theorem:
     if     N5 != 0
         && len == 4 {
         for (i, i1, i2) in [(1,2,3), (2,1,3), (3,1,2)] {
@@ -85,8 +94,7 @@ fn skip_cyclotomic_integer(cyclotomic_integer: &CyclotomicInteger,
             }
         }
     }
-
-    // Skip cases where four roots of unity differ by factors of zeta_7.
+    // Discard cases where four roots of unity differ by factors of ζ_7:
     if N7 != 0 {
         for a in 0..len {
             for b in 0..a {
@@ -107,12 +115,35 @@ fn skip_cyclotomic_integer(cyclotomic_integer: &CyclotomicInteger,
             }
         }
     }
+    // If the cyclotomic integer has not been discarded, then we keep it for
+    // further inspection:
     false
 }
 
-pub fn loop_over_roots(N: u32, n: usize,
-                       mut file_tables: &File,
-                       mut file_output: &File) {
+/// Get candidates from Lemma 3.11.
+///
+/// The logical input of this function is the couple (N, n), as in Lemma 3.11.
+/// The goal of this function is twofold:
+///
+///   - Generate all exponents/indices (and therefore, all cyclotomic integers)
+///   that we have two check, according to the list conditions from the
+///   beginning of the lemma;
+///
+///   - For each such generated cyclotomic integer, we discard it if its castle
+///   is >= 5.1 using the `discard_cyclotomic_integer` function. If the
+///   cyclotomic integer is not discarded by `discard_cyclotomic_integer`, then
+///   we keep track of it by storing it in the output file (note that we also
+///   store the computed sin-cos table).
+///
+/// To speed up computation, we use multi-threading: this is done with
+/// `std::Thread`. We make sure that only one sin-cos table is stored in memory
+/// (each thread would want its own copy); this is done using `std::Arc`.
+///
+/// This function is public and called on all eight values (N, n) given in the
+/// statement of Lemma 3.11; this is done in the `main` function (`main.rs`
+/// file).
+pub fn get_candidates(N: u32, n: usize, mut file_tables: &File, mut file_output: &File) {
+
     let NN = if N%2 == 0 {N} else {2*N};
     let N2 = NN/2;
     let N3 = if NN%3 == 0 {NN/3} else {0};
@@ -123,8 +154,7 @@ pub fn loop_over_roots(N: u32, n: usize,
     let sin_cos_table = sin_cos_table(NN);
     for j in 0..NN {
         let (sin, cos) = sin_cos_table[j as usize];
-        // TODO: Would be better to output sin, cos, in that order.
-        //       But one has to be very careful.
+        // Would be better to output sin, cos, in that order...
         writeln!(file_tables, "{} {} {} {}", NN, j, cos, sin).expect("output failure");
     }
     let sin_cos_table_arc = Arc::new(sin_cos_table);
@@ -152,8 +182,8 @@ pub fn loop_over_roots(N: u32, n: usize,
                         let cyclotomic_integer = CyclotomicInteger{ exponents: &exponents,
                                                                     level: NN,
                                                                     sin_cos_table: &sin_cos_table_local};
-                        // Record this case in case it has not been filtered
-                        if !skip_cyclotomic_integer(&cyclotomic_integer, (NN, N2, N3, N5, N7)) {
+                        // Record this case in case it has not been discarded:
+                        if !discard_candidate(&cyclotomic_integer, (NN, N2, N3, N5, N7)) {
                             tx_clone.send(exponents.clone()).unwrap();
                         }
                     }
@@ -183,8 +213,15 @@ pub fn loop_over_roots(N: u32, n: usize,
 
 }
 
+/// Order cyclotomic integers.
+///
+/// The goal of this struct is simply to create a data structure for the datum
+/// of a level and a vector of exponents, which we use to derive a "canonical"
+/// (in the sense of Rust trait derivation) ordering for the candidates found by
+/// `get_candidates`. This allows to order the candidates in the output file,
+/// despite the multiple threads returning candidates in no particular order.
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Output {
-    pub level: u32,
-    pub exponents: Vec<u32>
+struct Output {
+    level: u32,
+    exponents: Vec<u32>
 }
