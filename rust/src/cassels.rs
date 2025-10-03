@@ -60,10 +60,10 @@ fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
         for a in 0..len {
             for b in 0..a {
                 if     l[a] > l[b]
-                    && (l[a]-l[b]) % N5 == 0 {
+                    && (l[a] - l[b]).is_multiple_of(N5) {
                     for c in 0..b {
                         if    l[b] > l[c]
-                           && (l[b]-l[c]) % N5 == 0 {
+                           && (l[b] - l[c]).is_multiple_of(N5) {
                             return true;
                         }
                     }
@@ -86,8 +86,8 @@ fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
     if     N5 != 0
         && len == 4 {
         for (i, i1, i2) in [(1,2,3), (2,1,3), (3,1,2)] {
-            if    (l[i] - l[0]) % N5 == 0
-               && (l[i2] - l[i1]) % N5 == 0
+            if    (l[i] - l[0]).is_multiple_of(N5)
+               && (l[i2] - l[i1]).is_multiple_of(N5)
                && l[i] - l[0] != l[i2] - l[i1]
                && l[1] - l[0] + l[i2] - l[i1] != NN {
                 return true;
@@ -99,13 +99,13 @@ fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
         for a in 0..len {
             for b in 0..a {
                 if    l[a] > l[b]
-                   && (l[a]-l[b]) % N7 == 0 {
+                   && (l[a] - l[b]).is_multiple_of(N7) {
                     for c in 0..b {
                         if     l[b] > l[c]
-                            && (l[b]-l[c]) % N7 == 0 {
+                            && (l[b] - l[c]).is_multiple_of(N7) {
                             for d in 0..c {
                                 if    l[c] > l[d]
-                                   && (l[c]-l[d]) % N7 == 0 {
+                                   && (l[c] - l[d]).is_multiple_of(N7) {
                                     return true;
                                 }
                             }
@@ -144,7 +144,7 @@ fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
 /// file).
 pub fn get_candidates(N: u32, n: usize, mut file_tables: &File, mut file_output: &File) {
 
-    let NN = if N%2 == 0 {N} else {2*N};
+    let NN = if N.is_multiple_of(2) {N} else {2*N};
     let N2 = NN/2;
     let N3 = if NN%3 == 0 {NN/3} else {0};
     let N5 = if NN%5 == 0 {NN/5} else {0};
