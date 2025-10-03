@@ -35,9 +35,9 @@ pub struct CyclotomicInteger<'a> {
     // A note on "lifetimes": because our instances store references, we must
     // ensure that the references live at least as long as the instances
     // themselves. To do that, one simply declares a so-called "lifetime" for
-    // the instances. In our case, the lifetime is `a`, and it is used after its
-    // declaration on the type annotation of the references we store. Note that
-    // the code cannot be compiled without this. More information here:
+    // the references. In our case, the lifetime is `a`, and it is used after
+    // its declaration on the type annotation of the references we store. Note
+    // that the code cannot be compiled without this. More information here:
     // https://doc.rust-lang.org/rust-by-example/scope/lifetime/fn.html.
 
     pub exponents: &'a Vec<u32>,
