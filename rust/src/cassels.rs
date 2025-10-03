@@ -23,7 +23,6 @@ use super::cyclotomic::{sin_cos_table, CyclotomicInteger};
 /// 
 /// This function is private and only used in `discard_candidates`
 /// (plural).
-
 fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
                      n_values: (u32, u32, u32, u32, u32)) -> bool {
 
@@ -125,15 +124,15 @@ fn discard_candidate(cyclotomic_integer: &CyclotomicInteger,
 /// The logical input of this function is the couple (N, n), as in Lemma 3.11.
 /// The goal of this function is twofold:
 ///
-///   - Generate all exponents/indices (and therefore, all cyclotomic integers)
-///   that we have two check, according to the list conditions from the
-///   beginning of the lemma;
+/// 1. Generate all exponents/indices (and therefore, all cyclotomic integers)
+///    that we have two check, according to the list conditions from the
+///    beginning of the lemma;
 ///
-///   - For each such generated cyclotomic integer, we discard it if its castle
-///   is >= 5.1 using the `discard_cyclotomic_integer` function. If the
-///   cyclotomic integer is not discarded by `discard_cyclotomic_integer`, then
-///   we keep track of it by storing it in the output file (note that we also
-///   store the computed sin-cos table).
+/// 2. For each such generated cyclotomic integer, we discard it if its castle
+///    is >= 5.1 using the `discard_cyclotomic_integer` function. If the
+///    cyclotomic integer is not discarded by `discard_cyclotomic_integer`, then
+///    we keep track of it by storing it in the output file (note that we also
+///    store the computed sin-cos table).
 ///
 /// To speed up computation, we use multi-threading: this is done with
 /// `std::Thread`. We make sure that only one sin-cos table is stored in memory
