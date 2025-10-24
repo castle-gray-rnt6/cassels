@@ -1,8 +1,9 @@
 # The exceptional set in Cassels's theorem on small cyclotomic integers
 
 This repository is associated to the paper _The exceptional set in Cassels's
-theorem on small cyclotomic integers_ by Jitendra Bajpai, Srijan Das, Kiran S.
-Kedlaya, Nam H. Le, Meghan Lee, Antoine Leudière, and Jorge Mello.
+theorem on small cyclotomic integers_
+([arXiv](https://arxiv.org/abs/2510.20435)) by Jitendra Bajpai, Srijan Das,
+Kiran S. Kedlaya, Nam H. Le, Meghan Lee, Antoine Leudière, and Jorge Mello.
 
 We solve a Number Theory conjecture related to the classification of "small"
 _cyclotomic integers_. The conjecture was stated by Raphael M. Robinson in his
